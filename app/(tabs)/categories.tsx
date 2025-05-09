@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronLeft } from 'lucide-react-native';
 import ProductCard from '@/components/ProductCard';
 import { allProducts } from '@/data/products';
 import { categories } from '@/data/categories';
@@ -25,13 +24,14 @@ export default function CategoriesScreen() {
     }
   }, [activeCategory]);
 
-  const navigateToProduct = (id) => {
+  const navigateToProduct = (id: string) => {
     router.push(`/product/${id}`);
   };
 
   const renderHeader = () => (
     <View style={styles.header}>
       <Text style={styles.pageTitle}>Categories</Text>
+      <View style={styles.headerDivider} />
     </View>
   );
 
@@ -39,48 +39,50 @@ export default function CategoriesScreen() {
     <SafeAreaView style={styles.container} edges={['top']}>
       {renderHeader()}
       
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.categoriesScrollView}
-      >
-        <TouchableOpacity
-          style={[
-            styles.categoryPill,
-            activeCategory === 'all' && styles.activeCategoryPill,
-          ]}
-          onPress={() => setActiveCategory('all')}
+      <View style={styles.categoriesWrapper}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoriesScrollView}
         >
-          <Text
-            style={[
-              styles.categoryPillText,
-              activeCategory === 'all' && styles.activeCategoryPillText,
-            ]}
-          >
-            All
-          </Text>
-        </TouchableOpacity>
-        
-        {categories.map((category) => (
           <TouchableOpacity
-            key={category.id}
             style={[
               styles.categoryPill,
-              activeCategory === category.id && styles.activeCategoryPill,
+              activeCategory === 'all' && styles.activeCategoryPill,
             ]}
-            onPress={() => setActiveCategory(category.id)}
+            onPress={() => setActiveCategory('all')}
           >
             <Text
               style={[
                 styles.categoryPillText,
-                activeCategory === category.id && styles.activeCategoryPillText,
+                activeCategory === 'all' && styles.activeCategoryPillText,
               ]}
             >
-              {category.name}
+              All
             </Text>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+          
+          {categories.map((category) => (
+            <TouchableOpacity
+              key={category.id}
+              style={[
+                styles.categoryPill,
+                activeCategory === category.id && styles.activeCategoryPill,
+              ]}
+              onPress={() => setActiveCategory(category.id)}
+            >
+              <Text
+                style={[
+                  styles.categoryPillText,
+                  activeCategory === category.id && styles.activeCategoryPillText,
+                ]}
+              >
+                {category.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
 
       <FlatList
         data={filteredProducts}
@@ -117,6 +119,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
+  headerDivider: {
+    height: 1,
+    backgroundColor: '#f0f0f0',
+    marginTop: 8,
+  },
+  categoriesWrapper: {
+    backgroundColor: '#ffffff',
+    paddingVertical: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
   pageTitle: {
     fontFamily: 'Inter-Bold',
     fontSize: 24,
@@ -124,7 +137,9 @@ const styles = StyleSheet.create({
   },
   categoriesScrollView: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingTop: 8,
+    paddingBottom: 16,
+    flexDirection: 'row',
   },
   categoryPill: {
     paddingHorizontal: 16,
@@ -132,17 +147,38 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f3f3',
     borderRadius: 50,
     marginRight: 8,
+    borderWidth: 1,
+    borderColor: '#f0f0f0',
+    minWidth: 80,
+    alignItems: 'center',
   },
   activeCategoryPill: {
     backgroundColor: '#4CAF50',
+    borderColor: '#4CAF50',
   },
   categoryPillText: {
     fontFamily: 'Inter-Medium',
     fontSize: 14,
     color: '#666',
+    textAlign: 'center',
   },
   activeCategoryPillText: {
     color: '#FFFFFF',
+    fontWeight: '500',
+  },
+  seasonLabel: {
+    position: 'absolute', 
+    top: 8,
+    left: 8,
+    backgroundColor: '#4CAF50',
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  seasonLabelText: {
+    color: 'white',
+    fontSize: 10,
+    fontFamily: 'Inter-Medium',
   },
   productList: {
     padding: 16,
