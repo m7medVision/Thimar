@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { StyleSheet, View, Text } from 'react-native';
-import { Chrome as Home, Search, ShoppingBasket, User } from 'lucide-react-native';
+import { Home, Search, ShoppingBasket, User } from 'lucide-react-native';
 import { useCartContext } from '@/context/CartContext';
 
 export default function TabLayout() {

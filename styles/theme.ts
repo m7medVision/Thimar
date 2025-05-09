@@ -120,6 +120,14 @@ export const defaultStyles = {
     fontSize: typography.fontSize['3xl'],
     color: colors.text.primary,
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center' as const,
+  },
+  column: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
 };
 
 const theme = {

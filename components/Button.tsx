@@ -58,7 +58,7 @@ export default function Button({
             color={type === 'primary' ? theme.colors.white : theme.colors.primary} 
           />
         ) : (
-          <View style={theme.defaultStyles.row}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {icon && <View style={{ marginRight: theme.spacing.sm }}>{icon}</View>}
             <Text
               style={[
