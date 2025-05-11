@@ -2,27 +2,17 @@
 export const categories = [
   {
     id: 'cat1',
-    name: 'Fresh Fruits',
-    image: 'https://images.pexels.com/photos/1132047/pexels-photo-1132047.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+    name: 'تمور عمانية',
+    image: 'https://www.omandaily.om/uploads/imported_images/uploads/2018/05/1337809.jpg'
   },
   {
     id: 'cat2',
-    name: 'Berries',
-    image: 'https://images.pexels.com/photos/1153655/pexels-photo-1153655.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+    name: 'موز الباطنة',
+    image: 'https://cdn4.premiumread.com/?url=https://omandaily.om/omandaily/uploads/images/2021/05/31/1653109.jpg&w=1000&q=72&f=jpg&t=1'
   },
   {
     id: 'cat3',
-    name: 'Tropical',
-    image: 'https://images.pexels.com/photos/918643/pexels-photo-918643.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+    name: 'ليمون عماني',
+    image: 'https://shabiba.eu-central-1.linodeobjects.com/2020/02/11/1103088.jpg'
   },
-  {
-    id: 'cat4',
-    name: 'Seasonal',
-    image: 'https://images.pexels.com/photos/1313267/pexels-photo-1313267.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
-  },
-  {
-    id: 'cat5',
-    name: 'Organic',
-    image: 'https://images.pexels.com/photos/95425/pexels-photo-95425.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
-  }
 ];
