@@ -51,12 +51,12 @@ export default function ProfileScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.profileSection}>
           <Image 
-            source={{ uri: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' }} 
+            source={{ uri: 'https://i.ibb.co/xSH5yQgq/image.png' }} 
             style={styles.profileImage}
           />
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>John Smith</Text>
-            <Text style={styles.profileEmail}>john.smith@example.com</Text>
+            <Text style={styles.profileName}>Abdulrahman Al Harthi</Text>
+            <Text style={styles.profileEmail}>abdulrahman.alharthi@gmail.com</Text>
           </View>
           <TouchableOpacity style={styles.editButton}>
             <Text style={styles.editButtonText}>Edit</Text>

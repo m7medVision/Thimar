@@ -8,7 +8,6 @@ import CategoryCard from '@/components/CategoryCard';
 import { featuredProducts } from '@/data/products';
 import { categories } from '@/data/categories';
 import { seasonalProducts } from '@/data/products';
-import { formatPrice } from '@/utils/formatters';
 
 // Add proper types
 type FlatListRef = {
