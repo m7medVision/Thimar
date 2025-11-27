@@ -91,7 +91,7 @@ export default function SuccessScreen() {
           />
           
           <Text style={styles.thankYouText}>
-            Thank you for shopping with Thimar! We'll notify you when your order is on its way.
+            Thank you for shopping with Thimar! We&apos;ll notify you when your order is on its way.
           </Text>
         </Animated.View>
       </View>
