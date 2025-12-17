@@ -218,7 +218,7 @@ export default function ProductCard({
 
           <TouchableOpacity
             style={styles.addButton}
-            onPress={onAddToCart || onPress}
+            onPress={handleAddToCart}
             accessible={true}
             accessibilityLabel="إضافة إلى السلة"
             accessibilityHint="اضغط لإضافة هذا المنتج إلى سلة التسوق"

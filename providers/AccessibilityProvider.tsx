@@ -88,7 +88,7 @@ export function AccessibilityProvider({ children }: AccessibilityProviderProps) 
   const checkAccessibilitySettings = async () => {
     try {
       const screenReader = await AccessibilityInfo.isScreenReaderEnabled();
-      const reduceMotion = await AccessibilityInfo.isScreenReaderEnabled();
+      const reduceMotion = await AccessibilityInfo.isReduceMotionEnabled();
       const reduceTransparency = await AccessibilityInfo.isReduceTransparencyEnabled();
 
       setIsScreenReaderEnabled(screenReader);
