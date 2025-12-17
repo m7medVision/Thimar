@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, TextInput, I18nManager } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Search, X } from 'lucide-react-native';
 import ProductCard from '@/components/ProductCard';
 import { allProducts } from '@/data/products';
 import { categories } from '@/data/categories';
@@ -12,17 +13,32 @@ export default function CategoriesScreen() {
   const [activeCategory, setActiveCategory] = useState<string>(
     params.activeCategory?.toString() || 'all'
   );
+  const [searchQuery, setSearchQuery] = useState('');
   const [filteredProducts, setFilteredProducts] = useState(allProducts);
 
   useEffect(() => {
-    if (activeCategory === 'all') {
-      setFilteredProducts(allProducts);
-    } else {
-      setFilteredProducts(
-        allProducts.filter((product) => product.categoryId === activeCategory)
+    let products = allProducts;
+    
+    // Filter by category
+    if (activeCategory !== 'all') {
+      products = products.filter((product) => product.categoryId === activeCategory);
+    }
+    
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.trim().toLowerCase();
+      products = products.filter((product) => 
+        product.name.toLowerCase().includes(query) ||
+        product.description?.toLowerCase().includes(query)
       );
     }
-  }, [activeCategory]);
+    
+    setFilteredProducts(products);
+  }, [activeCategory, searchQuery]);
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
 
   const navigateToProduct = (id: string) => {
     router.push(`/product/${id}`);
@@ -31,7 +47,35 @@ export default function CategoriesScreen() {
   const renderHeader = () => (
     <View style={styles.header}>
       <Text style={styles.pageTitle}>الفئات</Text>
-      <View style={styles.headerDivider} />
+      
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <View style={styles.searchInputWrapper}>
+          <Search size={20} color="#999" style={styles.searchIcon} />
+          <TextInput
+            style={[styles.searchInput, { textAlign: I18nManager.isRTL ? 'right' : 'left' }]}
+            placeholder="ابحث عن منتج..."
+            placeholderTextColor="#999"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            returnKeyType="search"
+            accessible={true}
+            accessibilityLabel="حقل البحث"
+            accessibilityHint="اكتب للبحث عن منتج"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity 
+              onPress={clearSearch} 
+              style={styles.clearButton}
+              accessible={true}
+              accessibilityLabel="مسح البحث"
+              accessibilityRole="button"
+            >
+              <X size={18} color="#999" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
     </View>
   );
 
@@ -100,7 +144,11 @@ export default function CategoriesScreen() {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyStateContainer}>
-            <Text style={styles.emptyStateText}>لا توجد منتجات في هذه الفئة</Text>
+            <Text style={styles.emptyStateText}>
+              {searchQuery.trim() 
+                ? `لا توجد نتائج لـ "${searchQuery}"` 
+                : 'لا توجد منتجات في هذه الفئة'}
+            </Text>
           </View>
         }
       />
@@ -119,10 +167,30 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
-  headerDivider: {
-    height: 1,
-    backgroundColor: '#f0f0f0',
-    marginTop: 8,
+  searchContainer: {
+    marginTop: 12,
+  },
+  searchInputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    height: 44,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontFamily: 'Cairo-Regular',
+    fontSize: 14,
+    color: '#333',
+    height: '100%',
+  },
+  clearButton: {
+    padding: 4,
+    marginLeft: 4,
   },
   categoriesWrapper: {
     backgroundColor: '#ffffff',

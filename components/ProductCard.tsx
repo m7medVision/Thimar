@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, ViewStyle, Dimensions, I18nManager } from 'react-native';
-import { Plus, Star, Heart } from 'lucide-react-native';
+import { Plus, Star, Heart, Volume2 } from 'lucide-react-native';
 import { useState } from 'react';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming, Easing } from 'react-native-reanimated';
 import { formatPriceWithText } from '@/utils/formatters';
@@ -7,6 +7,7 @@ import SellerInfo from './SellerInfo';
 import PriceDisplay from './PriceDisplay';
 import { useAccessibility } from '@/providers/AccessibilityProvider';
 import * as Haptics from 'expo-haptics';
+import * as Speech from 'expo-speech';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -89,6 +90,18 @@ export default function ProductCard({
     if (onAddToCart) {
       onAddToCart(product.id);
     }
+  };
+
+  const speakProductDetails = async () => {
+    // Trigger haptic feedback
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    
+    const textToSpeak = `${product.name}. السعر: ${formatPriceWithText(product.price)} للكيلوغرام. التقييم: ${product.rating.toFixed(1)} من 5.${product.isOrganic ? ' منتج عضوي.' : ''}${product.isSeasonal ? ' متوفر في الموسم.' : ''}`;
+    
+    Speech.speak(textToSpeak, {
+      language: 'ar',
+      rate: 0.9,
+    });
   };
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -178,6 +191,16 @@ export default function ProductCard({
               <Star size={12} color="#FFC107" fill="#FFC107" />
               <Text style={styles.ratingText}>{product.rating.toFixed(1)}</Text>
             </View>
+            <TouchableOpacity
+              style={styles.voiceButton}
+              onPress={speakProductDetails}
+              accessible={true}
+              accessibilityLabel={`استمع إلى تفاصيل ${product.name}`}
+              accessibilityHint="اضغط للاستماع إلى اسم المنتج وسعره"
+              accessibilityRole="button"
+            >
+              <Volume2 size={14} color="#4CAF50" />
+            </TouchableOpacity>
           </View>
           <Text
             style={[styles.name, { textAlign: I18nManager.isRTL ? 'right' : 'left' }]}
@@ -303,6 +326,16 @@ const styles = StyleSheet.create({
     color: '#666',
     marginLeft: I18nManager.isRTL ? 0 : 4,
     marginRight: I18nManager.isRTL ? 4 : 0,
+  },
+  voiceButton: {
+    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(76, 175, 80, 0.3)',
   },
   name: {
     fontFamily: 'Cairo-SemiBold',
