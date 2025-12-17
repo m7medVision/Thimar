@@ -6,7 +6,7 @@ import { ShoppingBasket, ArrowRight } from 'lucide-react-native';
 import { useCartContext } from '@/context/CartContext';
 import CartItem from '@/components/CartItem';
 import Button from '@/components/Button';
-import { formatPrice } from '@/utils/formatters';
+import PriceDisplay from '@/components/PriceDisplay';
 
 export default function CartScreen() {
   const router = useRouter();
@@ -28,19 +28,19 @@ export default function CartScreen() {
 
   const renderHeader = () => (
     <View style={styles.header}>
-      <Text style={styles.pageTitle}>Your Cart</Text>
+      <Text style={styles.pageTitle}>سلة التسوق</Text>
     </View>
   );
 
   const renderEmptyCart = () => (
     <View style={styles.emptyCartContainer}>
       <ShoppingBasket size={64} color="#ccc" />
-      <Text style={styles.emptyCartTitle}>Your cart is empty</Text>
+      <Text style={styles.emptyCartTitle}>سلتك فارغة</Text>
       <Text style={styles.emptyCartMessage}>
-        Start shopping to add items to your cart
+        ابدأ التسوق لإضافة المنتجات إلى سلتك
       </Text>
       <Button 
-        title="Browse Products" 
+        title="تصفح المنتجات" 
         onPress={() => router.push('/')}
         icon={<ArrowRight size={16} color="#FFFFFF" />}
       />
@@ -71,21 +71,21 @@ export default function CartScreen() {
 
           <View style={styles.summaryContainer}>
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Subtotal</Text>
-              <Text style={styles.summaryValue}>{formatPrice(subtotal)}</Text>
+              <Text style={styles.summaryLabel}>المجموع الفرعي</Text>
+              <PriceDisplay price={subtotal} size="sm" color="#333" />
             </View>
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Delivery Fee</Text>
-              <Text style={styles.summaryValue}>{formatPrice(deliveryFee)}</Text>
+              <Text style={styles.summaryLabel}>رسوم التوصيل</Text>
+              <PriceDisplay price={deliveryFee} size="sm" color="#333" />
             </View>
             <View style={styles.divider} />
             <View style={styles.summaryRow}>
-              <Text style={styles.totalLabel}>Total</Text>
-              <Text style={styles.totalValue}>{formatPrice(total)}</Text>
+              <Text style={styles.totalLabel}>الإجمالي</Text>
+              <PriceDisplay price={total} size="lg" color="#4CAF50" />
             </View>
 
             <Button
-              title="Proceed to Checkout"
+              title="إتمام الشراء"
               onPress={handleCheckout}
               style={styles.checkoutButton}
             />
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   pageTitle: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 24,
     color: '#333',
   },
@@ -124,13 +124,13 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   emptyCartTitle: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 18,
     color: '#333',
     marginTop: 16,
   },
   emptyCartMessage: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
     textAlign: 'center',
@@ -149,12 +149,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   summaryLabel: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
   },
   summaryValue: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#333',
   },
@@ -164,12 +164,12 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   totalLabel: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 16,
     color: '#333',
   },
   totalValue: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 18,
     color: '#4CAF50',
   },

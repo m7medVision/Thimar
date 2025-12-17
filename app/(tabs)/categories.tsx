@@ -30,7 +30,7 @@ export default function CategoriesScreen() {
 
   const renderHeader = () => (
     <View style={styles.header}>
-      <Text style={styles.pageTitle}>Categories</Text>
+      <Text style={styles.pageTitle}>الفئات</Text>
       <View style={styles.headerDivider} />
     </View>
   );
@@ -58,7 +58,7 @@ export default function CategoriesScreen() {
                 activeCategory === 'all' && styles.activeCategoryPillText,
               ]}
             >
-              All
+              الكل
             </Text>
           </TouchableOpacity>
           
@@ -100,7 +100,7 @@ export default function CategoriesScreen() {
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View style={styles.emptyStateContainer}>
-            <Text style={styles.emptyStateText}>No products found in this category</Text>
+            <Text style={styles.emptyStateText}>لا توجد منتجات في هذه الفئة</Text>
           </View>
         }
       />
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   pageTitle: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 24,
     color: '#333',
   },
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     borderColor: '#4CAF50',
   },
   categoryPillText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#666',
     textAlign: 'center',
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   seasonLabelText: {
     color: 'white',
     fontSize: 10,
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
   },
   productList: {
     padding: 16,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   emptyStateText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 16,
     color: '#666',
     textAlign: 'center',

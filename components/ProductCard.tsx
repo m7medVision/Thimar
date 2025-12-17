@@ -1,9 +1,12 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, ViewStyle, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ViewStyle, Dimensions, I18nManager } from 'react-native';
 import { Plus, Star, Heart } from 'lucide-react-native';
 import { useState } from 'react';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming, Easing } from 'react-native-reanimated';
-import { formatPrice } from '@/utils/formatters';
+import { formatPriceWithText } from '@/utils/formatters';
 import SellerInfo from './SellerInfo';
+import PriceDisplay from './PriceDisplay';
+import { useAccessibility } from '@/providers/AccessibilityProvider';
+import * as Haptics from 'expo-haptics';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -17,32 +20,75 @@ type ProductCardProps = {
     isOrganic?: boolean;
     isSeasonal?: boolean;
     sellerId: string;
+    description?: string;
+    inStock?: boolean;
   };
   onPress: () => void;
+  onAddToCart?: (productId: string) => void;
+  onToggleFavorite?: (productId: string, isFavorite: boolean) => void;
   style?: ViewStyle;
 };
 
-export default function ProductCard({ product, onPress, style }: ProductCardProps) {
-  const [isPressed, setIsPressed] = useState(false);
+export default function ProductCard({
+  product,
+  onPress,
+  onAddToCart,
+  onToggleFavorite,
+  style,
+}: ProductCardProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   const scale = useSharedValue(1);
   const heartScale = useSharedValue(1);
 
+  const { announceForAccessibility, isScreenReaderEnabled } = useAccessibility();
+
   const handlePressIn = () => {
-    setIsPressed(true);
     scale.value = withSpring(0.95, { damping: 15 });
   };
 
   const handlePressOut = () => {
-    setIsPressed(false);
     scale.value = withSpring(1, { damping: 15 });
   };
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+  const toggleFavorite = async () => {
+    const newFavoriteState = !isFavorite;
+    setIsFavorite(newFavoriteState);
+
+    // Trigger haptic feedback
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
     heartScale.value = withSpring(1.3, { damping: 10 }, () => {
       heartScale.value = withTiming(1, { duration: 300, easing: Easing.bounce });
     });
+
+    // Announce to screen reader
+    if (isScreenReaderEnabled) {
+      announceForAccessibility(
+        newFavoriteState
+          ? `تم إضافة ${product.name} إلى المفضلة`
+          : `تم إزالة ${product.name} من المفضلة`
+      );
+    }
+
+    // Call callback if provided
+    if (onToggleFavorite) {
+      onToggleFavorite(product.id, newFavoriteState);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    // Trigger haptic feedback
+    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+    // Announce to screen reader
+    if (isScreenReaderEnabled) {
+      announceForAccessibility(`تم إضافة ${product.name} إلى السلة`);
+    }
+
+    // Call callback if provided
+    if (onAddToCart) {
+      onAddToCart(product.id);
+    }
   };
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -57,56 +103,104 @@ export default function ProductCard({ product, onPress, style }: ProductCardProp
     };
   });
 
+  const getAccessibilityLabel = () => {
+    const labels = [
+      `منتج: ${product.name}`,
+      `السعر: ${formatPriceWithText(product.price)} للكيلوغرام`,
+      `التقييم: ${product.rating.toFixed(1)} من 5`,
+      product.isOrganic && 'منتج عضوي',
+      product.isSeasonal && 'في الموسم',
+      product.inStock !== false ? 'متوفر' : 'غير متوفر',
+      isFavorite ? 'مضاف إلى المفضلة' : 'غير مضاف إلى المفضلة',
+    ].filter(Boolean).join('، ');
+
+    return labels;
+  };
+
   return (
-    <Animated.View style={[styles.container, animatedStyle, style]}>
+    <Animated.View
+      style={[styles.container, animatedStyle, style]}
+      accessible={true}
+      accessibilityLabel={getAccessibilityLabel()}
+      accessibilityHint="اضغط لعرض تفاصيل المنتج"
+      accessibilityRole="button"
+    >
       <TouchableOpacity
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         activeOpacity={0.9}
         style={styles.touchable}
+        accessible={false}
+        importantForAccessibility="no-hide-descendants"
       >
         <View style={styles.imageContainer}>
-          <Image source={{ uri: product.image }} style={styles.image} resizeMode="cover" />
+          <Image
+            source={{ uri: product.image }}
+            style={styles.image}
+            resizeMode="cover"
+            accessible={true}
+            accessibilityLabel={`صورة منتج: ${product.name}`}
+            accessibilityRole="image"
+          />
           <View style={styles.badgeContainer}>
             {product.isOrganic && (
               <View style={styles.organicBadge}>
-                <Text style={styles.organicText}>Organic</Text>
+                <Text style={styles.organicText}>عضوي</Text>
               </View>
             )}
             {product.isSeasonal && (
               <View style={styles.seasonalBadge}>
-                <Text style={styles.seasonalText}>In Season</Text>
+                <Text style={styles.seasonalText}>في الموسم</Text>
               </View>
             )}
           </View>
-          <TouchableOpacity style={styles.favoriteButton} onPress={toggleFavorite}>
+          <TouchableOpacity
+            style={styles.favoriteButton}
+            onPress={toggleFavorite}
+            accessible={true}
+            accessibilityLabel={isFavorite ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
+            accessibilityHint="اضغط لإضافة أو إزالة المنتج من المفضلة"
+            accessibilityRole="button"
+          >
             <Animated.View style={heartAnimatedStyle}>
-              <Heart 
-                size={16} 
-                color={isFavorite ? "#FF5252" : "#FFFFFF"} 
-                fill={isFavorite ? "#FF5252" : "transparent"} 
+              <Heart
+                size={16}
+                color={isFavorite ? "#FF5252" : "#FFFFFF"}
+                fill={isFavorite ? "#FF5252" : "transparent"}
               />
             </Animated.View>
           </TouchableOpacity>
         </View>
         <View style={styles.contentContainer}>
-          <View style={styles.topRow}>
-            <View style={styles.ratingContainer}>
+          <View style={[styles.topRow, { flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' }]}>
+            <View style={[styles.ratingContainer, { flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' }]}>
               <Star size={12} color="#FFC107" fill="#FFC107" />
               <Text style={styles.ratingText}>{product.rating.toFixed(1)}</Text>
             </View>
           </View>
-          <Text style={styles.name} numberOfLines={1}>{product.name}</Text>
+          <Text
+            style={[styles.name, { textAlign: I18nManager.isRTL ? 'right' : 'left' }]}
+            numberOfLines={1}
+            accessible={false}
+          >
+            {product.name}
+          </Text>
           <View style={styles.priceContainer}>
-            <Text style={styles.price}>{formatPrice(product.price)}</Text>
-            <Text style={styles.perKg}>/ kg</Text>
+            <PriceDisplay price={product.price} size="md" color="#4CAF50" showPerKg={true} />
           </View>
-          
+
           {/* Seller info */}
           <SellerInfo sellerId={product.sellerId} />
-          
-          <TouchableOpacity style={styles.addButton} onPress={onPress}>
+
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={onAddToCart || onPress}
+            accessible={true}
+            accessibilityLabel="إضافة إلى السلة"
+            accessibilityHint="اضغط لإضافة هذا المنتج إلى سلة التسوق"
+            accessibilityRole="button"
+          >
             <Plus size={16} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
@@ -158,7 +252,7 @@ const styles = StyleSheet.create({
   },
   organicText: {
     color: '#FFFFFF',
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 8,
   },
   seasonalBadge: {
@@ -169,7 +263,7 @@ const styles = StyleSheet.create({
   },
   seasonalText: {
     color: '#FFFFFF',
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 8,
   },
   favoriteButton: {
@@ -177,11 +271,13 @@ const styles = StyleSheet.create({
     top: 8,
     right: 8,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
+    minHeight: 44,
+    minWidth: 44,
   },
   contentContainer: {
     padding: 12,
@@ -202,41 +298,29 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   ratingText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 10,
     color: '#666',
-    marginLeft: 4,
+    marginLeft: I18nManager.isRTL ? 0 : 4,
+    marginRight: I18nManager.isRTL ? 4 : 0,
   },
   name: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 14,
     color: '#333',
     marginBottom: 4,
   },
   priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
     marginBottom: 4,
-  },
-  price: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 16,
-    color: '#4CAF50',
-  },
-  perKg: {
-    fontFamily: 'Inter-Regular',
-    fontSize: 12,
-    color: '#999',
-    marginLeft: 2,
   },
   addButton: {
     position: 'absolute',
     bottom: 12,
     right: 12,
     backgroundColor: '#4CAF50',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#4CAF50',
@@ -244,5 +328,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 3,
+    minHeight: 44,
+    minWidth: 44,
   },
 });

@@ -31,11 +31,25 @@ export const colors = {
 };
 
 export const typography = {
+  // English fonts
   fontFamily: {
     regular: 'Inter-Regular',
     medium: 'Inter-Medium',
     semiBold: 'Inter-SemiBold',
     bold: 'Inter-Bold',
+  },
+  // Arabic fonts - Cairo (primary)
+  arabicFontFamily: {
+    regular: 'Cairo-Regular',
+    medium: 'Cairo-Medium',
+    semiBold: 'Cairo-SemiBold',
+    bold: 'Cairo-Bold',
+  },
+  // Arabic fonts - Tajawal (alternative)
+  arabicAltFontFamily: {
+    regular: 'Tajawal-Regular',
+    medium: 'Tajawal-Medium',
+    bold: 'Tajawal-Bold',
   },
   fontSize: {
     xs: 10,

@@ -66,21 +66,21 @@ export default function SuccessScreen() {
             ],
           }}
         >
-          <Text style={styles.title}>Order Placed!</Text>
+          <Text style={styles.title}>تم تأكيد الطلب!</Text>
           <Text style={styles.message}>
-            Your order {orderNumber} has been successfully placed.
+            تم تأكيد طلبك {orderNumber} بنجاح.
           </Text>
           
           <View style={styles.detailsContainer}>
             <View style={styles.divider} />
-            <Text style={styles.detailsLabel}>Order Details</Text>
+            <Text style={styles.detailsLabel}>تفاصيل الطلب</Text>
             <View style={styles.detailsRow}>
-              <Text style={styles.detailLabel}>Estimated Delivery</Text>
-              <Text style={styles.detailValue}>Within 24 hours</Text>
+              <Text style={styles.detailLabel}>وقت التوصيل المتوقع</Text>
+              <Text style={styles.detailValue}>خلال ٢٤ ساعة</Text>
             </View>
             <View style={styles.detailsRow}>
-              <Text style={styles.detailLabel}>Payment Method</Text>
-              <Text style={styles.detailValue}>Credit Card</Text>
+              <Text style={styles.detailLabel}>طريقة الدفع</Text>
+              <Text style={styles.detailValue}>بطاقة ائتمان</Text>
             </View>
             <View style={styles.divider} />
           </View>
@@ -91,20 +91,20 @@ export default function SuccessScreen() {
           />
           
           <Text style={styles.thankYouText}>
-            Thank you for shopping with Thimar! We&apos;ll notify you when your order is on its way.
+            شكراً لتسوقك من ثمار! سنقوم بإشعارك عندما يكون طلبك في الطريق.
           </Text>
         </Animated.View>
       </View>
       
       <View style={styles.buttonGroup}>
         <Button
-          title="Continue Shopping"
+          title="متابعة التسوق"
           onPress={returnToHome}
           style={styles.continueButton}
           icon={<Home size={18} color="#FFFFFF" />}
         />
         <Button
-          title="View Orders"
+          title="عرض الطلبات"
           onPress={viewOrders}
           style={styles.viewOrdersButton}
           type="secondary"
@@ -139,14 +139,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 28,
     color: '#333',
     textAlign: 'center',
     marginBottom: 16,
   },
   message: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   detailsLabel: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 16,
     color: '#333',
     marginBottom: 16,
@@ -176,12 +176,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   detailLabel: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
   },
   detailValue: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#333',
   },
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   thankYouText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
     textAlign: 'center',

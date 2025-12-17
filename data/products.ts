@@ -24,7 +24,7 @@ export const allProducts = [
     name: 'تمر نغال',
     description: 'تمر نغال العماني من أجود أنواع التمور في سلطنة عمان، مشهور بحجمه الكبير وطعمه الفريد.',
     price: 3.00,
-    image: 'https://omanista.com/sooq/pictures/z5JUHT/image-2.jpg',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRPIV5RPU82eFFd8tLVbmvthmLwgj-htjGWQ&s',
     categoryId: 'cat1',
     sellerId: 'seller1', // مزارع الباطنة
     rating: 4.8,

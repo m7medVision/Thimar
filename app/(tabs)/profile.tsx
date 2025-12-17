@@ -4,28 +4,29 @@ import { useRouter } from 'expo-router';
 import { ChevronRight, User, Truck, Star, Settings, CircleHelp as HelpCircle, LogOut, Store } from 'lucide-react-native';
 import { sellers } from '@/data/sellers';
 import { allProducts } from '@/data/products';
+import PriceDisplay from '@/components/PriceDisplay';
 
 // Dummy data for orders
 const orders = [
   {
     id: 'order1',
-    date: 'June 15, 2025',
+    date: '١٥ يونيو ٢٠٢٥',
     total: 124.50,
-    status: 'Delivered',
+    status: 'تم التوصيل',
     items: 5
   },
   {
     id: 'order2',
-    date: 'June 10, 2025',
+    date: '١٠ يونيو ٢٠٢٥',
     total: 87.25,
-    status: 'Delivered',
+    status: 'تم التوصيل',
     items: 3
   },
   {
     id: 'order3',
-    date: 'June 5, 2025',
+    date: '٥ يونيو ٢٠٢٥',
     total: 136.00,
-    status: 'Delivered',
+    status: 'تم التوصيل',
     items: 7
   }
 ];
@@ -45,7 +46,7 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.pageTitle}>My Account</Text>
+        <Text style={styles.pageTitle}>حسابي</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -55,11 +56,11 @@ export default function ProfileScreen() {
             style={styles.profileImage}
           />
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>Abdulrahman Al Harthi</Text>
+            <Text style={styles.profileName}>عبدالرحمن الحارثي</Text>
             <Text style={styles.profileEmail}>abdulrahman.alharthi@gmail.com</Text>
           </View>
           <TouchableOpacity style={styles.editButton}>
-            <Text style={styles.editButtonText}>Edit</Text>
+            <Text style={styles.editButtonText}>تعديل</Text>
           </TouchableOpacity>
         </View>
 
@@ -67,7 +68,7 @@ export default function ProfileScreen() {
         <View style={styles.section}>
           <View style={styles.sectionTitleContainer}>
             <Store size={18} color="#4CAF50" />
-            <Text style={styles.sectionTitle}>Fruit Sellers</Text>
+            <Text style={styles.sectionTitle}>بائعو الفواكه</Text>
           </View>
 
           {sellers.map((seller) => (
@@ -81,7 +82,7 @@ export default function ProfileScreen() {
                 <View>
                   <Text style={styles.sellerName}>{seller.name}</Text>
                   <Text style={styles.sellerProductCount}>
-                    {getProductCountBySeller(seller.id)} products
+                    {getProductCountBySeller(seller.id)} منتج
                   </Text>
                 </View>
               </View>
@@ -97,21 +98,22 @@ export default function ProfileScreen() {
         <View style={styles.section}>
           <View style={styles.sectionTitleContainer}>
             <Truck size={18} color="#4CAF50" />
-            <Text style={styles.sectionTitle}>My Orders</Text>
+            <Text style={styles.sectionTitle}>طلباتي</Text>
           </View>
 
           {orders.map((order) => (
             <TouchableOpacity key={order.id} style={styles.orderItem}>
               <View>
                 <Text style={styles.orderDate}>{order.date}</Text>
-                <Text style={styles.orderInfo}>
-                  {order.items} items · ${order.total.toFixed(2)}
-                </Text>
+                <View style={styles.orderInfoRow}>
+                  <Text style={styles.orderInfo}>{order.items} عناصر · </Text>
+                  <PriceDisplay price={order.total} size="sm" color="#666" />
+                </View>
               </View>
               <View style={styles.orderStatusContainer}>
                 <Text style={[
                   styles.orderStatus,
-                  order.status === 'Delivered' && styles.statusDelivered
+                  order.status === 'تم التوصيل' && styles.statusDelivered
                 ]}>
                   {order.status}
                 </Text>
@@ -121,7 +123,7 @@ export default function ProfileScreen() {
           ))}
           
           <TouchableOpacity style={styles.seeAllButton}>
-            <Text style={styles.seeAllButtonText}>See All Orders</Text>
+            <Text style={styles.seeAllButtonText}>عرض جميع الطلبات</Text>
           </TouchableOpacity>
         </View>
 
@@ -130,7 +132,7 @@ export default function ProfileScreen() {
             <View style={styles.menuIconContainer}>
               <User size={20} color="#4CAF50" />
             </View>
-            <Text style={styles.menuItemText}>Personal Information</Text>
+            <Text style={styles.menuItemText}>المعلومات الشخصية</Text>
             <ChevronRight size={16} color="#ccc" />
           </TouchableOpacity>
           
@@ -138,7 +140,7 @@ export default function ProfileScreen() {
             <View style={styles.menuIconContainer}>
               <Star size={20} color="#4CAF50" />
             </View>
-            <Text style={styles.menuItemText}>My Reviews</Text>
+            <Text style={styles.menuItemText}>تقييماتي</Text>
             <ChevronRight size={16} color="#ccc" />
           </TouchableOpacity>
           
@@ -146,7 +148,7 @@ export default function ProfileScreen() {
             <View style={styles.menuIconContainer}>
               <Settings size={20} color="#4CAF50" />
             </View>
-            <Text style={styles.menuItemText}>Settings</Text>
+            <Text style={styles.menuItemText}>الإعدادات</Text>
             <ChevronRight size={16} color="#ccc" />
           </TouchableOpacity>
           
@@ -154,7 +156,7 @@ export default function ProfileScreen() {
             <View style={styles.menuIconContainer}>
               <HelpCircle size={20} color="#4CAF50" />
             </View>
-            <Text style={styles.menuItemText}>Help & Support</Text>
+            <Text style={styles.menuItemText}>المساعدة والدعم</Text>
             <ChevronRight size={16} color="#ccc" />
           </TouchableOpacity>
           
@@ -162,7 +164,7 @@ export default function ProfileScreen() {
             <View style={[styles.menuIconContainer, styles.logoutIcon]}>
               <LogOut size={20} color="#FF6B6B" />
             </View>
-            <Text style={[styles.menuItemText, styles.logoutText]}>Logout</Text>
+            <Text style={[styles.menuItemText, styles.logoutText]}>تسجيل الخروج</Text>
           </TouchableOpacity>
         </View>
 
@@ -186,7 +188,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   pageTitle: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 24,
     color: '#333',
   },
@@ -207,13 +209,13 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   profileName: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 18,
     color: '#333',
     marginBottom: 4,
   },
   profileEmail: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
   },
@@ -224,7 +226,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   editButtonText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#4CAF50',
   },
@@ -246,7 +248,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 16,
     color: '#333',
     marginLeft: 8,
@@ -270,13 +272,13 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   sellerName: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 15,
     color: '#333',
     marginBottom: 4,
   },
   sellerProductCount: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 13,
     color: '#666',
   },
@@ -285,7 +287,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sellerRatingText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#666',
     marginLeft: 4,
@@ -299,13 +301,17 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   orderDate: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 15,
     color: '#333',
     marginBottom: 4,
   },
+  orderInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   orderInfo: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 13,
     color: '#666',
   },
@@ -314,7 +320,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   orderStatus: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 13,
     marginRight: 8,
   },
@@ -326,7 +332,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   seeAllButtonText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#4CAF50',
   },
@@ -361,7 +367,7 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     flex: 1,
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 15,
     color: '#333',
   },
@@ -379,7 +385,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   appVersionText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 12,
     color: '#999',
   },

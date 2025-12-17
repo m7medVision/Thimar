@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Minus, Plus, Trash2 } from 'lucide-react-native';
-import { formatPrice } from '@/utils/formatters';
+import PriceDisplay from './PriceDisplay';
 
 type CartItemProps = {
   item: {
@@ -38,7 +38,9 @@ export default function CartItem({ item, onQuantityChange, onRemove }: CartItemP
           </TouchableOpacity>
         </View>
         
-        <Text style={styles.price}>{formatPrice(item.price)} / kg</Text>
+        <View style={styles.priceRow}>
+          <PriceDisplay price={item.price} size="sm" color="#4CAF50" showPerKg={true} />
+        </View>
         
         <View style={styles.quantityRow}>
           <View style={styles.quantityControls}>
@@ -60,12 +62,12 @@ export default function CartItem({ item, onQuantityChange, onRemove }: CartItemP
             </TouchableOpacity>
           </View>
           
-          <Text style={styles.totalPrice}>{formatPrice(item.price * item.quantity)}</Text>
+          <PriceDisplay price={item.price * item.quantity} size="md" color="#333" />
         </View>
         
         {item.quantity <= item.minQuantity && (
           <Text style={styles.minQuantityText}>
-            Minimum quantity: {item.minQuantity} kg
+            الحد الأدنى: {item.minQuantity} كجم
           </Text>
         )}
       </View>
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   name: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 16,
     color: '#333',
     flex: 1,
@@ -111,10 +113,7 @@ const styles = StyleSheet.create({
   removeButton: {
     padding: 4,
   },
-  price: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 14,
-    color: '#4CAF50',
+  priceRow: {
     marginBottom: 8,
   },
   quantityRow: {
@@ -142,18 +141,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   quantity: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#333',
     paddingHorizontal: 12,
   },
-  totalPrice: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 16,
-    color: '#333',
-  },
   minQuantityText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 12,
     color: '#FF6B6B',
     marginTop: 4,

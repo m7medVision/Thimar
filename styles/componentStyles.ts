@@ -23,7 +23,7 @@ export const buttonStyles = StyleSheet.create({
     borderColor: theme.colors.background.tertiary,
   },
   buttonText: {
-    fontFamily: theme.typography.fontFamily.semiBold,
+    fontFamily: theme.typography.arabicFontFamily.semiBold,
     fontSize: theme.typography.fontSize.lg,
   },
   primaryButtonText: {

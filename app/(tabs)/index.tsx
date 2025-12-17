@@ -1,18 +1,14 @@
-import { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, FlatList, Animated, Dimensions } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, FlatList, I18nManager } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Search, ShoppingBasket } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProductCard from '@/components/ProductCard';
 import CategoryCard from '@/components/CategoryCard';
-import { featuredProducts } from '@/data/products';
+import ThimarLogo from '@/components/ThimarLogo';
+import { WavePattern } from '@/components/DecorativeSVG';
+import { featuredProducts, seasonalProducts } from '@/data/products';
 import { categories } from '@/data/categories';
-import { seasonalProducts } from '@/data/products';
-
-// Add proper types
-type FlatListRef = {
-  scrollToIndex: (params: { index: number; animated: boolean }) => void;
-};
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -29,34 +25,79 @@ export default function HomeScreen() {
     });
   };
 
+  const handleProductAddToCart = (productId: string) => {
+    // Add to cart logic
+    console.log('Adding product to cart:', productId);
+  };
+
+  const handleProductToggleFavorite = (productId: string, isFavorite: boolean) => {
+    // Toggle favorite logic
+    console.log('Toggle favorite:', productId, isFavorite);
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.welcomeText}>Welcome to</Text>
-            <Text style={styles.appName}>ثمار (Thimar)</Text>
+        {/* Decorative wave pattern at top */}
+        <View style={styles.decorativeWave}>
+          <WavePattern height={60} color="#4CAF50" opacity={0.08} />
+        </View>
+        
+        <View style={[styles.header, { flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' }]}>
+          <View style={styles.logoContainer}>
+            <ThimarLogo size={60} showText={false} variant="icon" />
+            <View style={styles.welcomeContainer}>
+              <Text style={[styles.welcomeText, { textAlign: I18nManager.isRTL ? 'right' : 'left' }]}>
+                أهلاً بكم في
+              </Text>
+              <Text style={[styles.appName, { textAlign: I18nManager.isRTL ? 'right' : 'left' }]}>
+                ثمار
+              </Text>
+            </View>
           </View>
-          <TouchableOpacity style={styles.cartButton} onPress={() => router.push('/cart')}>
+          <TouchableOpacity
+            style={styles.cartButton}
+            onPress={() => router.push('/cart')}
+            accessible={true}
+            accessibilityLabel="سلة التسوق"
+            accessibilityHint="اضغط لعرض سلة التسوق"
+            accessibilityRole="button"
+          >
             <ShoppingBasket color="#333" size={24} />
           </TouchableOpacity>
         </View>
 
         <View style={styles.searchContainer}>
-          <Search size={20} color="#999" style={styles.searchIcon} />
+          <Search
+            size={20}
+            color="#999"
+            style={[styles.searchIcon, I18nManager.isRTL ? { marginRight: 0, marginLeft: 8 } : { marginRight: 8, marginLeft: 0 }]}
+          />
           <TextInput
-            style={styles.searchInput}
-            placeholder="Search for fruits..."
+            style={[styles.searchInput, { textAlign: I18nManager.isRTL ? 'right' : 'left' }]}
+            placeholder="ابحث عن الفواكه..."
             value={searchQuery}
             onChangeText={setSearchQuery}
+            accessible={true}
+            accessibilityLabel="حقل البحث"
+            accessibilityHint="اكتب للبحث عن منتجات"
+            accessibilityRole="search"
           />
         </View>
 
         <View style={styles.sectionContainer}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Categories</Text>
-            <TouchableOpacity onPress={() => router.push('/categories')}>
-              <Text style={styles.seeAll}>See All</Text>
+          <View style={[styles.sectionHeader, { flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' }]}>
+            <Text style={[styles.sectionTitle, { textAlign: I18nManager.isRTL ? 'right' : 'left' }]}>
+              الفئات
+            </Text>
+            <TouchableOpacity
+              onPress={() => router.push('/categories')}
+              accessible={true}
+              accessibilityLabel="عرض جميع الفئات"
+              accessibilityHint="اضغط لعرض جميع فئات المنتجات"
+              accessibilityRole="button"
+            >
+              <Text style={styles.seeAll}>عرض الكل</Text>
             </TouchableOpacity>
           </View>
           <ScrollView 
@@ -75,10 +116,17 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.sectionContainer}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>In Season</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAll}>See All</Text>
+          <View style={[styles.sectionHeader, { flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' }]}>
+            <Text style={[styles.sectionTitle, { textAlign: I18nManager.isRTL ? 'right' : 'left' }]}>
+              في الموسم
+            </Text>
+            <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="عرض جميع المنتجات الموسمية"
+              accessibilityHint="اضغط لعرض جميع المنتجات الموسمية"
+              accessibilityRole="button"
+            >
+              <Text style={styles.seeAll}>عرض الكل</Text>
             </TouchableOpacity>
           </View>
           <ScrollView 
@@ -91,16 +139,25 @@ export default function HomeScreen() {
                 key={product.id}
                 product={product}
                 onPress={() => navigateToProduct(product.id)}
+                onAddToCart={handleProductAddToCart}
+                onToggleFavorite={handleProductToggleFavorite}
               />
             ))}
           </ScrollView>
         </View>
 
         <View style={[styles.sectionContainer, { marginBottom: 20 }]}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Best Sellers</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAll}>See All</Text>
+          <View style={[styles.sectionHeader, { flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' }]}>
+            <Text style={[styles.sectionTitle, { textAlign: I18nManager.isRTL ? 'right' : 'left' }]}>
+              الأكثر مبيعاً
+            </Text>
+            <TouchableOpacity
+              accessible={true}
+              accessibilityLabel="عرض جميع المنتجات الأكثر مبيعاً"
+              accessibilityHint="اضغط لعرض جميع المنتجات الأكثر مبيعاً"
+              accessibilityRole="button"
+            >
+              <Text style={styles.seeAll}>عرض الكل</Text>
             </TouchableOpacity>
           </View>
           <FlatList
@@ -109,6 +166,8 @@ export default function HomeScreen() {
               <ProductCard
                 product={item}
                 onPress={() => navigateToProduct(item.id)}
+                onAddToCart={handleProductAddToCart}
+                onToggleFavorite={handleProductToggleFavorite}
                 style={styles.gridCard}
               />
             )}
@@ -128,6 +187,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+  decorativeWave: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: -1,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -135,20 +201,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  welcomeContainer: {
+    justifyContent: 'center',
+  },
   welcomeText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
   },
   appName: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 24,
     color: '#4CAF50',
   },
   cartButton: {
     backgroundColor: '#f3f3f3',
     borderRadius: 50,
-    padding: 8,
+    padding: 12,
+    minHeight: 48,
+    minWidth: 48,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -164,7 +240,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 16,
     padding: 12,
   },
@@ -179,12 +255,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionTitle: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 18,
     color: '#333',
   },
   seeAll: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#4CAF50',
   },

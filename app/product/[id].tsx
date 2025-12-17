@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, I18nManager } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Star, ArrowLeft, Plus, Minus, Truck, Clock, ShoppingBasket } from 'lucide-react-native';
 import { useCartContext } from '@/context/CartContext';
 import { allProducts } from '@/data/products';
-import { formatPrice } from '@/utils/formatters';
 import Button from '@/components/Button';
+import PriceDisplay from '@/components/PriceDisplay';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SellerInfo from '@/components/SellerInfo';
 
@@ -22,8 +22,8 @@ export default function ProductDetailScreen() {
   if (!product) {
     return (
       <View style={styles.notFoundContainer}>
-        <Text style={styles.notFoundText}>Product not found</Text>
-        <Button title="Go Back" onPress={() => router.back()} />
+        <Text style={styles.notFoundText}>المنتج غير موجود</Text>
+        <Button title="العودة" onPress={() => router.back()} />
       </View>
     );
   }
@@ -83,7 +83,7 @@ export default function ProductDetailScreen() {
           </TouchableOpacity>
           {product.isOrganic && (
             <View style={styles.organicBadge}>
-              <Text style={styles.organicBadgeText}>Organic</Text>
+              <Text style={styles.organicBadgeText}>عضوي</Text>
             </View>
           )}
         </View>
@@ -94,13 +94,15 @@ export default function ProductDetailScreen() {
               <Text style={styles.productName}>{product.name}</Text>
               {/* Add seller info below the product name */}
               <SellerInfo sellerId={product.sellerId} compact={false} />
-              <Text style={[styles.productPrice, { marginTop: 12 }]}>{formatPrice(product.price)} / kg</Text>
+              <View style={[styles.priceRow, { marginTop: 12 }]}>
+                <PriceDisplay price={product.price} size="lg" color="#4CAF50" showPerKg={true} />
+              </View>
             </View>
             {renderRatingStars(product.rating)}
           </View>
 
           <View style={styles.quantityContainer}>
-            <Text style={styles.sectionTitle}>Quantity</Text>
+            <Text style={styles.sectionTitle}>الكمية</Text>
             <View style={styles.quantitySelector}>
               <TouchableOpacity 
                 style={[styles.quantityButton, quantity <= product.minQuantity && styles.disabledButton]} 
@@ -119,27 +121,30 @@ export default function ProductDetailScreen() {
           <View style={styles.infoContainer}>
             <View style={styles.infoItem}>
               <Truck size={18} color="#4CAF50" />
-              <Text style={styles.infoText}>Free delivery on orders above $50</Text>
+              <View style={styles.infoTextRow}>
+                <Text style={styles.infoText}>توصيل مجاني للطلبات فوق </Text>
+                <PriceDisplay price={20} size="sm" color="#666" />
+              </View>
             </View>
             <View style={styles.infoItem}>
               <Clock size={18} color="#4CAF50" />
-              <Text style={styles.infoText}>Delivered within 24 hours</Text>
+              <Text style={styles.infoText}>التوصيل خلال ٢٤ ساعة</Text>
             </View>
           </View>
 
           <View style={styles.minQuantityInfo}>
             <Text style={styles.minQuantityText}>
-              * Minimum order: {product.minQuantity} kg
+              * الحد الأدنى للطلب: {product.minQuantity} كجم
             </Text>
           </View>
 
           <View style={styles.descriptionContainer}>
-            <Text style={styles.sectionTitle}>About this item</Text>
+            <Text style={styles.sectionTitle}>عن هذا المنتج</Text>
             <Text style={styles.descriptionText}>{product.description}</Text>
           </View>
 
           <View style={styles.nutritionContainer}>
-            <Text style={styles.sectionTitle}>Nutritional Information</Text>
+            <Text style={styles.sectionTitle}>المعلومات الغذائية</Text>
             <View style={styles.nutritionGrid}>
               {product.nutrition.map((item, index) => (
                 <View key={index} style={styles.nutritionItem}>
@@ -154,11 +159,11 @@ export default function ProductDetailScreen() {
 
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom || 16 }]}>
         <View style={styles.totalContainer}>
-          <Text style={styles.totalLabel}>Total</Text>
-          <Text style={styles.totalPrice}>{formatPrice(product.price * quantity)}</Text>
+          <Text style={styles.totalLabel}>الإجمالي</Text>
+          <PriceDisplay price={product.price * quantity} size="xl" color="#333" />
         </View>
         <Button
-          title="Add to Cart"
+          title="أضف إلى السلة"
           icon={<ShoppingBasket size={18} color="#FFFFFF" />}
           onPress={handleAddToCart}
           style={styles.addButton}
@@ -182,7 +187,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   notFoundText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 16,
     color: '#666',
     marginBottom: 16,
@@ -222,7 +227,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   organicBadgeText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 12,
     color: '#FFFFFF',
   },
@@ -243,28 +248,26 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   productName: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 24,
     color: '#333',
     marginBottom: 4,
   },
-  productPrice: {
-    fontFamily: 'Inter-SemiBold',
-    fontSize: 18,
-    color: '#4CAF50',
+  priceRow: {
+    // Container for price display
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   ratingText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#666',
     marginLeft: 4,
   },
   sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 16,
     color: '#333',
     marginBottom: 12,
@@ -294,7 +297,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   quantityText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 16,
     color: '#333',
   },
@@ -310,16 +313,21 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   infoText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
+    marginLeft: 8,
+  },
+  infoTextRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginLeft: 8,
   },
   minQuantityInfo: {
     marginBottom: 24,
   },
   minQuantityText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 13,
     color: '#FF6B6B',
     fontStyle: 'italic',
@@ -328,7 +336,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   descriptionText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
     lineHeight: 22,
@@ -350,13 +358,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nutritionValue: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 16,
     color: '#4CAF50',
     marginBottom: 4,
   },
   nutritionName: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 12,
     color: '#666',
   },
@@ -378,13 +386,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   totalLabel: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
     marginBottom: 4,
   },
   totalPrice: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 20,
     color: '#333',
   },

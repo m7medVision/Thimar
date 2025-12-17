@@ -3,13 +3,13 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 
 import { useRouter } from 'expo-router';
 import { useCartContext } from '@/context/CartContext';
 import Button from '@/components/Button';
-import { formatPrice } from '@/utils/formatters';
+import PriceDisplay from '@/components/PriceDisplay';
 import { CreditCard, MapPin, Check } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const paymentMethods = [
-  { id: 'card', name: 'Credit Card', icon: <CreditCard size={24} color="#333" /> },
-  { id: 'cod', name: 'Cash on Delivery', icon: <Check size={24} color="#333" /> },
+  { id: 'card', name: 'بطاقة ائتمان', icon: <CreditCard size={24} color="#333" /> },
+  { id: 'cod', name: 'الدفع عند الاستلام', icon: <Check size={24} color="#333" /> },
 ];
 
 export default function CheckoutScreen() {
@@ -30,7 +30,7 @@ export default function CheckoutScreen() {
 
   const handlePlaceOrder = () => {
     if (!address.trim()) {
-      alert('Please enter a delivery address');
+      alert('يرجى إدخال عنوان التوصيل');
       return;
     }
 
@@ -48,12 +48,12 @@ export default function CheckoutScreen() {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Delivery Address</Text>
+          <Text style={styles.sectionTitle}>عنوان التوصيل</Text>
           <View style={styles.addressInputContainer}>
             <MapPin size={20} color="#999" style={styles.addressIcon} />
             <TextInput
               style={styles.addressInput}
-              placeholder="Enter your full address"
+              placeholder="أدخل عنوانك الكامل"
               value={address}
               onChangeText={setAddress}
               multiline
@@ -62,14 +62,14 @@ export default function CheckoutScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Order Summary</Text>
+          <Text style={styles.sectionTitle}>ملخص الطلب</Text>
           <View style={styles.orderItems}>
             {cartItems.map((item) => (
               <View key={item.id} style={styles.orderItem}>
                 <Text style={styles.itemName}>{item.name}</Text>
                 <View style={styles.itemDetails}>
-                  <Text style={styles.itemQuantity}>{item.quantity} kg</Text>
-                  <Text style={styles.itemPrice}>{formatPrice(item.price * item.quantity)}</Text>
+                  <Text style={styles.itemQuantity}>{item.quantity} كجم</Text>
+                  <PriceDisplay price={item.price * item.quantity} size="sm" color="#333" />
                 </View>
               </View>
             ))}
@@ -78,21 +78,21 @@ export default function CheckoutScreen() {
           <View style={styles.divider} />
 
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Subtotal</Text>
-            <Text style={styles.summaryValue}>{formatPrice(subtotal)}</Text>
+            <Text style={styles.summaryLabel}>المجموع الفرعي</Text>
+            <PriceDisplay price={subtotal} size="sm" color="#333" />
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Delivery Fee</Text>
-            <Text style={styles.summaryValue}>{formatPrice(deliveryFee)}</Text>
+            <Text style={styles.summaryLabel}>رسوم التوصيل</Text>
+            <PriceDisplay price={deliveryFee} size="sm" color="#333" />
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalValue}>{formatPrice(total)}</Text>
+            <Text style={styles.totalLabel}>الإجمالي</Text>
+            <PriceDisplay price={total} size="md" color="#4CAF50" />
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Payment Method</Text>
+          <Text style={styles.sectionTitle}>طريقة الدفع</Text>
           <View style={styles.paymentOptions}>
             {paymentMethods.map((method) => (
               <TouchableOpacity
@@ -123,11 +123,11 @@ export default function CheckoutScreen() {
 
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom || 16 }]}>
         <View style={styles.totalContainer}>
-          <Text style={styles.finalTotalLabel}>Total Amount</Text>
-          <Text style={styles.finalTotalValue}>{formatPrice(total)}</Text>
+          <Text style={styles.finalTotalLabel}>المبلغ الإجمالي</Text>
+          <PriceDisplay price={total} size="xl" color="#333" />
         </View>
         <Button
-          title="Place Order"
+          title="تأكيد الطلب"
           onPress={handlePlaceOrder}
           style={styles.placeOrderButton}
           loading={isLoading}
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f5f5f5',
   },
   sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 16,
     color: '#333',
     marginBottom: 16,
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   addressInput: {
     flex: 1,
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#333',
     minHeight: 60,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   itemName: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#333',
     flex: 1,
@@ -192,13 +192,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemQuantity: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
     marginRight: 12,
   },
   itemPrice: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#333',
     width: 80,
@@ -215,22 +215,22 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   summaryLabel: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
   },
   summaryValue: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#333',
   },
   totalLabel: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 16,
     color: '#333',
   },
   totalValue: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 16,
     color: '#4CAF50',
   },
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   paymentName: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#333',
     marginLeft: 12,
@@ -292,12 +292,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   finalTotalLabel: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
   },
   finalTotalValue: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 20,
     color: '#333',
   },

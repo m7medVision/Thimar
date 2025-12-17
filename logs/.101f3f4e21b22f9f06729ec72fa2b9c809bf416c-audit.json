@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/home/mohammed/Thimar/logs/.101f3f4e21b22f9f06729ec72fa2b9c809bf416c-audit.json",
+    "files": [
+        {
+            "date": 1765358948404,
+            "name": "/home/mohammed/Thimar/logs/mcp-puppeteer-2025-12-10.log",
+            "hash": "eb7e0392c8244ae5b79d76708f202f7891f45004da6951dad02c710e0527dfd0"
+        },
+        {
+            "date": 1765798050808,
+            "name": "/home/mohammed/Thimar/logs/mcp-puppeteer-2025-12-15.log",
+            "hash": "a41ec73babe040eab8e3a61b612a47f5ac2233fb7db532e68e851c3fb5116d51"
+        },
+        {
+            "date": 1765957890549,
+            "name": "/home/mohammed/Thimar/logs/mcp-puppeteer-2025-12-17.log",
+            "hash": "738fe357e1015401c74050476aab1047dcbb13ba2b7ec545764f525a9d0969cb"
+        }
+    ],
+    "hashType": "sha256"
+}

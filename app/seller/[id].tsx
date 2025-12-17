@@ -39,9 +39,9 @@ export default function SellerProfileScreen() {
   if (!seller) {
     return (
       <View style={styles.notFoundContainer}>
-        <Text style={styles.notFoundText}>Seller not found</Text>
+        <Text style={styles.notFoundText}>البائع غير موجود</Text>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>Go Back</Text>
+          <Text style={styles.backButtonText}>العودة</Text>
         </TouchableOpacity>
       </View>
     );
@@ -70,7 +70,7 @@ export default function SellerProfileScreen() {
             
             <View style={styles.ratingContainer}>
               <Star size={16} color="#FFC107" fill="#FFC107" />
-              <Text style={styles.ratingText}>{seller.rating.toFixed(1)} Rating</Text>
+              <Text style={styles.ratingText}>{seller.rating.toFixed(1)} تقييم</Text>
             </View>
             
             <View style={styles.locationContainer}>
@@ -82,13 +82,13 @@ export default function SellerProfileScreen() {
 
         {/* Bio Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>About</Text>
+          <Text style={styles.sectionTitle}>نبذة عنا</Text>
           <Text style={styles.bioText}>{seller.bio}</Text>
         </View>
 
         {/* Contact Info */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Contact Information</Text>
+          <Text style={styles.sectionTitle}>معلومات التواصل</Text>
           
           <View style={styles.contactItem}>
             <Phone size={16} color="#4CAF50" />
@@ -102,13 +102,13 @@ export default function SellerProfileScreen() {
           
           <View style={styles.contactItem}>
             <Calendar size={16} color="#4CAF50" />
-            <Text style={styles.contactText}>Joined {seller.joinedDate}</Text>
+            <Text style={styles.contactText}>انضم في {seller.joinedDate}</Text>
           </View>
         </View>
 
         {/* Products Section */}
         <View style={styles.productsSection}>
-          <Text style={styles.sectionTitle}>Products from {seller.name}</Text>
+          <Text style={styles.sectionTitle}>منتجات {seller.name}</Text>
           
           <FlatList
             data={sellerProducts}
@@ -126,7 +126,7 @@ export default function SellerProfileScreen() {
             ListEmptyComponent={
               <View style={styles.emptyProductsContainer}>
                 <Text style={styles.emptyProductsText}>
-                  No products available from this seller at the moment.
+                  لا توجد منتجات متاحة من هذا البائع حالياً.
                 </Text>
               </View>
             }
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   notFoundText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 18,
     color: '#666',
     marginBottom: 16,
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   backButtonText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     color: '#4CAF50',
     fontSize: 16,
   },
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sellerName: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: 'Cairo-Bold',
     fontSize: 20,
     color: '#333',
     marginBottom: 4,
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   ratingText: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#666',
     marginLeft: 4,
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   locationText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
     marginLeft: 4,
@@ -233,13 +233,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f0f0f0',
   },
   sectionTitle: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Cairo-SemiBold',
     fontSize: 18,
     color: '#333',
     marginBottom: 12,
   },
   bioText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
     lineHeight: 22,
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   contactText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
     marginLeft: 8,
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyProductsText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 14,
     color: '#666',
     textAlign: 'center',

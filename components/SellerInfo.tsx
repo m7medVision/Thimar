@@ -70,18 +70,18 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   sellerName: {
-    fontFamily: 'Inter-Medium',
+    fontFamily: 'Cairo-Medium',
     fontSize: 14,
     color: '#333',
   },
   sellerLocation: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 12,
     color: '#666',
     marginTop: 2,
   },
   compactText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Cairo-Regular',
     fontSize: 11,
     color: '#666',
     marginLeft: 4,
